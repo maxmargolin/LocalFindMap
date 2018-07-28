@@ -1,0 +1,87 @@
+
+<!DOCTYPE HTML>
+
+<html>
+
+  <head>
+
+		<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#000000">
+    <title>mux</title>
+		<link rel="stylesheet" crossorigin=""	href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+
+		<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
+<style type="text/css">
+		
+body {
+	
+	 padding: 0; 
+	 margin: 0;
+	  } 
+	  
+	  html, body, #map { 
+	  	height: 101%; width: 100vw;
+	  	 }
+	  	 span { display:table; margin:0 auto; }
+	  	 
+	  	 
+		</style>
+	</head>
+	<body bgcolor="#000000"><b><span id="top">Local Map</span></b><div id="map"></div>
+		<script>
+
+			var map = L.map('map').setView([51.505, -0.09], 13);
+			 document.getElementById("top").style.color="White";
+
+
+			L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+
+			 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+
+			}).addTo(map);
+
+		
+		var matIcon = L.icon({ iconUrl: 'mat.png',shadowURL:'gs.png', iconSize: [38, 95],  shadowSize: [50, 64],  iconAnchor: [22, 94],  shadowAnchor: [4, 62],  popupAnchor: [-3, -76]
+			 });
+			 
+			var tableIcon = L.icon({ iconUrl: 'table2.png', iconSize: [38, 95],  shadowSize: [50, 64],  iconAnchor: [22, 94],  shadowAnchor: [4, 62],  popupAnchor: [-3, -76]
+			 });
+		
+	
+
+
+	marker = L.marker([32.07011, 34.79849], {icon: matIcon}) .addTo(map). bindPopup('Matress<br><b> 26/7/18 12:44</b>')
+	
+	marker2 = L.marker([32.07383, 34.80102], {icon: matIcon}) .addTo(map). bindPopup('Matress<br><b> 24/7/18 17:47</b>')
+	
+	marker3 = L.marker([32.07308, 34.80000], {icon: tableIcon}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:33</b><br/><img id="img1"  onclick="this.height=300; this. width=300" src="ac.jpg"  width="100" height="100" border="5"> ')
+	
+	
+	
+			 map.locate({setView: true, maxZoom: 16});
+			 
+function onLocationFound(e) { 
+	var radius = e.accuracy / 2; L.marker(e.latlng).addTo(map)
+	L.circle(e.latlng, radius).addTo(map);
+	document.getElementById("top").style.color="Lime";
+ } 
+ map.on('locationfound', onLocationFound); 
+
+
+
+function onLocationError(e) { 
+document.getElementById("top").style.color="Red";
+document.getElementById("top").innerHTML="No Location";
+} map.on('locationerror', onLocationError);
+
+
+
+function onMapClick(e) { alert("You clicked the map at " + e.latlng); } 
+/*map.on('click', onMapClick);*/
+	
+	
+		</script>
+	</body>
+</html>
+
