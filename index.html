@@ -2,15 +2,15 @@
 <!DOCTYPE HTML>
 
 <html>
-
   <head>
-
 		<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="theme-color" content="#000000">
     <title>mux</title>
 		<link rel="stylesheet" crossorigin=""	href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-
+<link href='simplelightbox.min.css' rel='stylesheet' type='text/css'>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="simplelightbox.min.js"></script>
 		<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet-src.js" crossorigin=""></script>
 <style type="text/css">
 		
@@ -21,16 +21,46 @@ body {
 	  } 
 	  
 	  html, body, #map { 
-	  	height: 101%; width: 100vw;
+	  	height: 90%; width: 100vw;
 	  	 }
+	  	 #map {
+	  	 	position:absolute;
+	  	 	top:0px; 
+	  	 	}
+	  	 	#top {
+	  	 		position:absolute;
+	  	 	 top:0%;
+	  	 	 right:0%;
+	  	 	 z-index: 1000;
+	  	 	 background-color: black;
+	  	 		} 
+	  	 		#img{
+	  	 			height:"10%"
+	  	 			width:"80"
+	  	 			} 
+	  	 	.gallery{
+	  	 		z-index: 500;
+	  	 	position:absolute;
+	  	 	top:91%; 
+	  	 	}
 	  	 span { display:table; margin:0 auto; }
 	  	 
 	  	 
 		</style>
 	</head>
-	<body bgcolor="#000000"><b><span id="top">Local Map</span></b><div id="map"></div>
+	<body bgcolor="#000000" text="green">
+<div id="map"></div>
+		<div class="gallery" id="g">
+			<div class="clear" id="c1"></div>
+	</div>
+				<b><div id="top">Local Map</div></b>
+		
 		<script>
-
+function gm(){
+var $gallery = $('.gallery a').simpleLightbox();
+return $gallery;
+}
+gal=gm();
 			var map = L.map('map').setView([51.505, -0.09], 13);
 			 document.getElementById("top").style.color="White";
 
@@ -53,9 +83,38 @@ body {
 
 	marker = L.marker([32.07011, 34.79849], {icon: matIcon}) .addTo(map). bindPopup('Matress<br><b> 26/7/18 12:44</b>')
 	
-	marker2 = L.marker([32.07383, 34.80102], {icon: matIcon}) .addTo(map). bindPopup('Matress<br><b> 24/7/18 17:47</b>')
+	marker2 = L.marker([32.07383, 34.80102], {icon: matIcon}) .addTo(map). bindPopup('xxx')
 	
-	marker3 = L.marker([32.07308, 34.80000], {icon: tableIcon}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:33</b><br/><img id="img1"  onclick="this.height=300; this. width=300" src="ac.jpg"  width="100" height="100" border="5"> ')
+	marker3 = L.marker([32.07308, 34.80000], {icon: tableIcon}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:33</b><br/>')
+	 
+	 function Display(base){
+	 		//delete all prev images
+	var del = document.getElementsByClassName('big');
+	while(del[0]!=null) {	del[0].parentNode.removeChild(del[0])
+	} ;
+	
+	for (i = 1; i < 3; i++) { 
+    var img = document.createElement("img");
+     img.setAttribute("src",base+i+".jpeg");
+ img.setAttribute("class","img");
+  img.setAttribute("width","80"); var imglink=document.createElement("a");
+    imglink.setAttribute("class","big")
+imglink.setAttribute("href", base+i+".jpeg");
+imglink.appendChild(img);
+var element = document.getElementById("g");
+var child = document.getElementById("c1");
+element.insertBefore(imglink, child);
+} 
+gal =gm() ;
+
+	 	} marker3.on('mouseover',onClick3);
+function onClick3(e) {
+	Display("rc");
+} 
+marker2.on('mouseover',onClick2);
+function onClick2(e) {
+	Display("mat");
+} 
 	
 	
 	
