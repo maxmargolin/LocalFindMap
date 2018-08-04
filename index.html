@@ -37,27 +37,35 @@ body {
 	  	 			height:"10%"
 	  	 			width:"80"
 	  	 			} 
-	  	 			#up{
+	  	 			#form, #help{
 	  	 				position:absolute;
 	  	 				top:7%;
-	  	 				left:10%;
+	  	 				left:12%;
 	  	 				z-index: 1800;
+	  	 				width: 76%;
+  margin: auto;
+  margin-top: 10px;
 	  	 				} 
 	  	 				.inform{
-	  	 					background-color: black;
+	  	 						background-color : black;
+	  	 						border-style: solid;
+		border-color: black;
+ border-width: 1px;
 	  	 					} 
+	  	 					.inhelp{
+	  	 						color:black;
+	  	 						background-color : white;
+	  	 						border-style: solid;
+		border-color: black;
+ border-width: 2px;
+	  	 						} 
 	  	 	.gallery{
-	  	 		z-index: 500;
+	  	 		z-index: 1100;
 	  	 	position:absolute;
 	  	 	top:91%; 
 	  	 	}
 	  	 span { display:table; margin:0 auto; }	 
 	  	 
-	  	 article {
-  width: 90%;
-  margin: auto;
-  margin-top: 10px;
-}
 
 .thumbnail {
 	float: left;
@@ -67,19 +75,78 @@ body {
   border-color:black;
   
 }
-
+option, select{
+	color:black;
+	background-color : #99D2FF;
+	border-style: solid;
+		border-color: black;
+ border-width: 2px;
+	} 
+	small{
+	color: white;
+	background-color : #444;
+	} 
+	#submit{
+		color: white;
+		background-color: #008CBA;
+		font-size: 20px;
+		border-style: solid;
+		border-color: black;
+ border-width: 2px;
+ padding: 8px 18px;
+		} 
+		#helpTitle{
+			 font-size: 24px;
+			 background-color : black ;
+			 color: white;
+			 border-style: solid;
+ border-width: 2px;
+ border-color:gray;
+			} 
+			#helpend{
+				background-color:black;
+				color:white;
+				border-color:gray;
+				border-style: solid;
+ border-width: 2px;
+				} 
+			#green{
+				background-color : lime ;
+				} 
+				#yellow{
+				background-color : yellow ;
+				}
+				#red{
+				background-color : #ff8c8c;
+				} 
+					#blue{
+				background-color : #5ccbe1;
+				} 
 	  	 
 		</style>
 	</head>
 	<body bgcolor="#000000" text="white">
 <div id="map"></div>
-
-  <div id="up">
- <article>
-      <label for="files" class="inform" >Make Post</label>
+ <div id="help"><span class="inhelp" id="helpTitle" > 🤔 HELP 🤔 </span><br/><span class="inhelp" id="helpSemiTitle" >This is a map of furniture that people found/left that you can take for free<br/> 🛋🛏🗺 </span>
+ <span class="inhelp" id="helpSemiTitle" ><b id="green">Green</b> items are more recent and are more likely to still be there</span>
+  <span class="inhelp" id="helpSemiTitle" ><b id="yellow">Yellow</b> and <b id="red">Red</b> items may already be taken</span>
+  <span class="inhelp" id="helpSemiTitle">Your live location is shown in <b id="blue">Blue</b></span>
+  <span class="inhelp" id="helpSemiTitle">Press the 📸 Icon if you find an item</span>
+    <span id="helpend">Talk to me at  hypermusictv📧gmail.com</span>
+  </div>
+  <div id="form">
+      <label for="files" class="inform"><large>Post a new item</large></label><br/><small background-color='black'>Found an item on the street? Post it with photos to help others find it. Thanks 🎉 </small><br/><br/><select id="mySelect">  <option value="" selected disabled hidden>Select Category</option>
+  <option>Table</option>
+  <option>Chair</option>
+  <option>Mattress</option>
+  <option>Couch</option>
+</select><br/>
       <input id="files" type="file" accept='image/*' class="inform" multiple/>
-      <output id="result" class="inform"  />
-    </article>
+      <div><output id="result" class="inform"/></div>
+      <br style="clear:both" />
+      <div> <br/>
+      <button id="submit" onclick="cleanImages('thumbnail'); toggleForm();">Submit</button></div>
+    
 </div>
 		<div class="gallery" id="g">
 			<div class="clear" id="c1"></div>
@@ -88,7 +155,6 @@ body {
 		<script>
  
  window.onload = function() {
-
   //Check File API support
   if (window.File && window.FileList && window.FileReader) {
     var filesInput = document.getElementById("files");
@@ -100,9 +166,6 @@ body {
 
       for (var i = 0; i < files.length; i++) {
         var file = files[i];
-
-        //Only pics
-       
 
         var picReader = new FileReader();
 
@@ -128,6 +191,26 @@ body {
 
 }
 
+
+    
+ var toggle = function(name){
+      var x=document.getElementById(name);
+    if (x.style.display ==="none") 
+        x.style.display ="block";
+     else 
+        x.style.display ="none";
+    
+    };
+   
+ var toggleForm = function(){
+      toggle('form') ;
+      document.getElementById("help").style.display="none";
+    };
+var toggleHelp = function(){
+      toggle('help') ;
+      document.getElementById("form").style.display="none";
+    }; 
+    
  
 function gm(){
 var $gallery = $('.gallery a').simpleLightbox();
@@ -146,7 +229,7 @@ var findMe = L.Control.extend({
   },
   onAdd: function (map) {
   var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-  container.style.backgroundColor = 'white' 
+  container.style.backgroundColor = 'white' ;
     container.style.width = '30px';
     container.style.height = '30px';
     container.style.backgroundImage = "url('find.png')";
@@ -160,7 +243,9 @@ var findMe = L.Control.extend({
 });
 			map.addControl(new findMe());
 			
-			document.getElementById("up").style.display = "none";
+			document.getElementById("form").style.display = "none";
+			document.getElementById("help").style.display = "none";
+			
 			var post = L.Control.extend({
  
   
@@ -169,25 +254,37 @@ var findMe = L.Control.extend({
   },
   onAdd: function (map) {
   var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-  container.style.backgroundColor = 'white' 
+  container.style.backgroundColor = 'white' ;
     container.style.width = '45px';
     container.style.height = '30px';
     container.style.backgroundImage = "url('rcam.png')";
   container.style.backgroundSize = "45px 30px";
-    container.onclick = function(){
-      var x=document.getElementById("up");
-    if (x.style.display ==="none") {
-        x.style.display ="block";
-    } else {
-        x.style.display ="none";
-    }
-    }
+    container.onclick = toggleForm ;
     return container;
 } 
  
 });
 			map.addControl(new post());
 			
+			var help = L.Control.extend({
+ 
+  
+  options: {
+    position: 'bottomleft' 
+  },
+  onAdd: function (map) {
+  var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+  container.style.backgroundColor = 'white' ;
+    container.style.width = '30px';
+    container.style.height = '30px';
+    container.style.backgroundImage = "url('h.jpg')";
+  container.style.backgroundSize = "30px 30px";
+    container.onclick = toggleHelp ;
+    return container;
+} 
+ 
+});
+			map.addControl(new help());
 			
 			 document.getElementById("top").style.color="White";
 
@@ -197,29 +294,39 @@ var findMe = L.Control.extend({
 
 			}).addTo(map);
 
-		var matIcon = L.icon({ iconUrl: 'mat.png',shadowURL:'gs.png', iconSize: [38, 95],  shadowSize: [50, 64],  iconAnchor: [22, 94],  shadowAnchor: [4, 62],  popupAnchor: [-3, -76]
+			 
+			var tableIconY = L.icon({ iconUrl: 'table2.png', shadowUrl: 't2.png', iconSize: [38, 95],  shadowSize: [60,50],  iconAnchor: [22, 94],  shadowAnchor: [32, 84],  popupAnchor: [-3, -76]
+			 });
+			 var tableIconG = L.icon({ iconUrl: 'table2.png', shadowUrl: 'gg2.png', iconSize: [38, 95],  shadowSize: [60,50],  iconAnchor: [22, 94],  shadowAnchor: [32, 86],  popupAnchor: [-3, -76]
+			 });
+				var matIconG = L.icon({ iconUrl: 'mat.png', shadowUrl: 'gg2.png', iconSize: [38, 95],  shadowSize: [60,80],  iconAnchor: [22, 94],  shadowAnchor: [32,94],  popupAnchor: [-3, -76]
+			 });
+			 var matIconY = L.icon({ iconUrl: 'mat.png', shadowUrl: 't2.png', iconSize: [38, 95],  shadowSize: [60,80],  iconAnchor: [22, 94],  shadowAnchor: [32, 87],  popupAnchor: [-3, -76]
 			 });
 			 
-			var tableIcon = L.icon({ iconUrl: 'table2.png', iconSize: [38, 95],  shadowSize: [50, 64],  iconAnchor: [22, 94],  shadowAnchor: [4, 62],  popupAnchor: [-3, -76]
+			  var couchIconR = L.icon({ iconUrl: 'couch.png', shadowUrl: 'red.png', iconSize: [60, 60],  shadowSize: [70,50],  iconAnchor: [22, 94],  shadowAnchor: [28, 84],  popupAnchor: [-3, -76]
 			 });
-		
-	
+			 
 var m=L.marker([0,0]).addTo(map)
 
-	marker = L.marker([32.07011, 34.79849], {icon: matIcon}) .addTo(map). bindPopup('Matress<br><b> 26/7/18 12:44</b>')
+	marker = L.marker([32.07011, 34.79849], {icon: matIconY}) .addTo(map). bindPopup('Matress<br><b> 26/7/18 12:44</b>')
 	
-	marker2 = L.marker([32.07383, 34.80102], {icon: matIcon}) .addTo(map). bindPopup('xxx')
+	marker2 = L.marker([32.07383, 34.80102], {icon: matIconG}) .addTo(map). bindPopup('Matress<br><b> 26/7/18 20:20</b>')
 	
-	marker3 = L.marker([32.07308, 34.80000], {icon: tableIcon}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:33</b><br/>')
+	marker3 = L.marker([32.07308, 34.80000], {icon: tableIconY}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:33</b><br/>')
+	
+	marker4 = L.marker([32.07238, 34.79555], {icon: tableIconG}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:37</b><br/>')
 	 
-	 function cleanImages() {
+	 marker5 = L.marker([32.06838, 34.80055], {icon: couchIconR}).addTo(map). bindPopup('Couch<br><b> 24/7/18 11:17</b><br/>')
+	 
+	 function cleanImages(cname) {
 	 			//delete all prev images
-	var del = document.getElementsByClassName('big');
+	var del = document.getElementsByClassName(cname);
 	while(del[0]!=null) {	del[0].parentNode.removeChild(del[0])
 	} ;
 	} 
-	 function Display(base){
-	 cleanImages();
+	 function Display(base){-
+	 cleanImages('big');
 	
 	for (i = 1; i < 3; i++) { 
     var img = document.createElement("img");
@@ -277,7 +384,7 @@ map.locate({enableHighAccuracy:true, maxZoom: 16, watch:true});
 
 
 
-function onMapClick(e) { cleanImages(); } 
+function onMapClick(e) { cleanImages('big'); } 
 map.on('click', onMapClick);
 	
 		</script>
