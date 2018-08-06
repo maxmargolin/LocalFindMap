@@ -4,7 +4,7 @@
   <head>
 		<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#5f9ea6">
     <title>mux</title>
 		<link rel="stylesheet" crossorigin=""	href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" />
 <link href='simplelightbox.min.css' rel='stylesheet' type='text/css'>
@@ -13,6 +13,8 @@
 		<script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet-src.js" crossorigin=""></script>
 		
 <script src='https://unpkg.com/leaflet.marker.slideto@0.2.0/Leaflet.Marker.SlideTo.js'></script>
+
+<script src="https://www.gstatic.com/firebasejs/5.3.1/firebase.js"></script>
 <style type="text/css">
 		
 body {	
@@ -135,17 +137,16 @@ option, select{
     <span id="helpend">Talk to me at  hypermusictv📧gmail.com</span>
   </div>
   <div id="form">
-      <label for="files" class="inform"><large>Post a new item</large></label><br/><small background-color='black'>Found an item on the street? Post it with photos to help others find it. Thanks 🎉 </small><br/><br/><select id="mySelect">  <option value="" selected disabled hidden>Select Category</option>
-  <option>Table</option>
-  <option>Chair</option>
-  <option>Mattress</option>
-  <option>Couch</option>
+      <label for="files" class="inform"><large>Post a new item</large></label><br/><small background-color='black'>Found an water fountain ⛲ on the street? Post it with photos to help others find it. Thanks 🎉 </small><br/><br/><select id="mySelect">  <option value="" selected disabled hidden>Select Condition</option>
+  <option>Good</option>
+  <option>OK</option>
+  <option>Bad</option>
 </select><br/>
       <input id="files" type="file" accept='image/*' class="inform" multiple/>
       <div><output id="result" class="inform"/></div>
       <br style="clear:both" />
       <div> <br/>
-      <button id="submit" onclick="cleanImages('thumbnail'); toggleForm();">Submit</button></div>
+      <button id="submit">Submit</button></div>
     
 </div>
 		<div class="gallery" id="g">
@@ -154,6 +155,13 @@ option, select{
 				<b><div id="top">Local Map</div></b>
 		<script>
  
+ var send =function() {
+ 	cleanImages('thumbnail'); toggleForm(); firebase.database().ref('Subs/Locs/'+lat+lng ).set({
+    lat: lat, 
+    lng: lng
+  });
+ 	} 
+ 	document.getElementById("submit" ).onclick=send;
  window.onload = function() {
   //Check File API support
   if (window.File && window.FileList && window.FileReader) {
@@ -294,8 +302,10 @@ var findMe = L.Control.extend({
 
 			}).addTo(map);
 
+			 var fIcon = L.icon({ iconUrl: 'fountain.png', shadowUrl: 'bg.png', iconSize: [38, 38],  shadowSize: [60,110],  iconAnchor: [19, 5],  shadowAnchor: [29, 32],  popupAnchor: [0, - 5]
+			 });
 			 
-			var tableIconY = L.icon({ iconUrl: 'table2.png', shadowUrl: 't2.png', iconSize: [38, 95],  shadowSize: [60,50],  iconAnchor: [22, 94],  shadowAnchor: [32, 84],  popupAnchor: [-3, -76]
+			/* var tableIconY = L.icon({ iconUrl: 'table2.png', shadowUrl: 't2.png', iconSize: [38, 95],  shadowSize: [60,50],  iconAnchor: [22, 94],  shadowAnchor: [32, 84],  popupAnchor: [-3, -76]
 			 });
 			 var tableIconG = L.icon({ iconUrl: 'table2.png', shadowUrl: 'gg2.png', iconSize: [38, 95],  shadowSize: [60,50],  iconAnchor: [22, 94],  shadowAnchor: [32, 86],  popupAnchor: [-3, -76]
 			 });
@@ -305,19 +315,36 @@ var findMe = L.Control.extend({
 			 });
 			 
 			  var couchIconR = L.icon({ iconUrl: 'couch.png', shadowUrl: 'red.png', iconSize: [60, 60],  shadowSize: [70,50],  iconAnchor: [22, 94],  shadowAnchor: [28, 84],  popupAnchor: [-3, -76]
-			 });
+			 }); */
 			 
 var m=L.marker([0,0]).addTo(map)
 
-	marker = L.marker([32.07011, 34.79849], {icon: matIconY}) .addTo(map). bindPopup('Matress<br><b> 26/7/18 12:44</b>')
 	
-	marker2 = L.marker([32.07383, 34.80102], {icon: matIconG}) .addTo(map). bindPopup('Matress<br><b> 26/7/18 20:20</b>')
 	
-	marker3 = L.marker([32.07308, 34.80000], {icon: tableIconY}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:33</b><br/>')
+	  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCp2Sc007OL7lYzNgnLu-bU1dH0NhYv3K4",
+    authDomain: "mekomit-8bc02.firebaseapp.com",
+    databaseURL: "https://mekomit-8bc02.firebaseio.com",
+    projectId: "mekomit-8bc02",
+    storageBucket: "mekomit-8bc02.appspot.com",
+    messagingSenderId: "195107121159"
+  };
+  firebase.initializeApp(config);
+	var database = firebase.database();
+	var leadsRef = database.ref('/Subs/Locs'); leadsRef.on('value', function(snapshot) { snapshot.forEach(function(childSnapshot) { var childData = childSnapshot.val(); 
+			 marker = L.marker([childData.lat, childData.lng], {icon: fIcon}) .addTo(map). bindPopup('<b> Good Condition💦 </b><br>water bottle fits');
+		}); });
+
 	
-	marker4 = L.marker([32.07238, 34.79555], {icon: tableIconG}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:37</b><br/>')
+	
+	//marker2 = L.marker([32.07383, 34.80102], {icon: matIconG}) .addTo(map). bindPopup('Matress<br><b> 26/7/18 20:20</b>')
+	
+	//marker3 = L.marker([32.07308, 34.80000], {icon: tableIconY}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:33</b><br/>')
+	
+	//marker4 = L.marker([32.07238, 34.79555], {icon: tableIconG}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:37</b><br/>')
 	 
-	 marker5 = L.marker([32.06838, 34.80055], {icon: couchIconR}).addTo(map). bindPopup('Couch<br><b> 24/7/18 11:17</b><br/>')
+	 //marker5 = L.marker([32.06838, 34.80055], {icon: couchIconR}).addTo(map). bindPopup('Couch<br><b> 24/7/18 11:17</b><br/>')
 	 
 	 function cleanImages(cname) {
 	 			//delete all prev images
@@ -342,7 +369,8 @@ element.insertBefore(imglink, child);
 } 
 gal =gm() ;
 
-	 	} marker3.on('mouseover',onClick3);
+	 	} 
+	 	/*, marker3.on('mouseover',onClick3);
 function onClick3(e) {
 	Display("rc");
 } 
@@ -350,7 +378,7 @@ marker2.on('mouseover',onClick2);
 function onClick2(e) {
 	Display("mat");
 } 
-	
+	*/
 			 map.locate({enableHighAccuracy:true, maxZoom: 16, watch:true});
 			 
 			
