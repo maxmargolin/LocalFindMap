@@ -154,12 +154,18 @@ option, select{
 	</div>
 				<b><div id="top">Local Map</div></b>
 		<script>
- 
+ var latitude=0;
+ var longitude=0;
  var send =function() {
- 	cleanImages('thumbnail'); toggleForm(); firebase.database().ref('Subs/Locs/'+lat+lng ).set({
-    lat: lat, 
-    lng: lng
+ 	cleanImages('thumbnail'); toggleForm();
+ 	
+ 	
+ 	if(latitude+longitude>0) firebase.database().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')).set({
+    lat: latitude, 
+    lng: longitude
   });
+  else
+  alert("noloc");
  	} 
  	document.getElementById("submit" ).onclick=send;
  window.onload = function() {
@@ -305,17 +311,7 @@ var findMe = L.Control.extend({
 			 var fIcon = L.icon({ iconUrl: 'fountain.png', shadowUrl: 'bg.png', iconSize: [38, 38],  shadowSize: [60,110],  iconAnchor: [19, 5],  shadowAnchor: [29, 32],  popupAnchor: [0, - 5]
 			 });
 			 
-			/* var tableIconY = L.icon({ iconUrl: 'table2.png', shadowUrl: 't2.png', iconSize: [38, 95],  shadowSize: [60,50],  iconAnchor: [22, 94],  shadowAnchor: [32, 84],  popupAnchor: [-3, -76]
-			 });
-			 var tableIconG = L.icon({ iconUrl: 'table2.png', shadowUrl: 'gg2.png', iconSize: [38, 95],  shadowSize: [60,50],  iconAnchor: [22, 94],  shadowAnchor: [32, 86],  popupAnchor: [-3, -76]
-			 });
-				var matIconG = L.icon({ iconUrl: 'mat.png', shadowUrl: 'gg2.png', iconSize: [38, 95],  shadowSize: [60,80],  iconAnchor: [22, 94],  shadowAnchor: [32,94],  popupAnchor: [-3, -76]
-			 });
-			 var matIconY = L.icon({ iconUrl: 'mat.png', shadowUrl: 't2.png', iconSize: [38, 95],  shadowSize: [60,80],  iconAnchor: [22, 94],  shadowAnchor: [32, 87],  popupAnchor: [-3, -76]
-			 });
-			 
-			  var couchIconR = L.icon({ iconUrl: 'couch.png', shadowUrl: 'red.png', iconSize: [60, 60],  shadowSize: [70,50],  iconAnchor: [22, 94],  shadowAnchor: [28, 84],  popupAnchor: [-3, -76]
-			 }); */
+			
 			 
 var m=L.marker([0,0]).addTo(map)
 
@@ -337,14 +333,6 @@ var m=L.marker([0,0]).addTo(map)
 		}); });
 
 	
-	
-	//marker2 = L.marker([32.07383, 34.80102], {icon: matIconG}) .addTo(map). bindPopup('Matress<br><b> 26/7/18 20:20</b>')
-	
-	//marker3 = L.marker([32.07308, 34.80000], {icon: tableIconY}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:33</b><br/>')
-	
-	//marker4 = L.marker([32.07238, 34.79555], {icon: tableIconG}).addTo(map). bindPopup('Table<br><b> 24/7/18 11:37</b><br/>')
-	 
-	 //marker5 = L.marker([32.06838, 34.80055], {icon: couchIconR}).addTo(map). bindPopup('Couch<br><b> 24/7/18 11:17</b><br/>')
 	 
 	 function cleanImages(cname) {
 	 			//delete all prev images
@@ -386,8 +374,10 @@ function onClick2(e) {
 	
 function onLocationFound(e) { 
 
+latitude=e.latlng.lat;
+longitude=e.latlng.lng;
 if(reloc==1){
-	map.setView([e.latlng.lat, e.latlng.lng], 15);
+	map.setView([latitude, longitude], 15);
 reloc=0;
 
 } 
