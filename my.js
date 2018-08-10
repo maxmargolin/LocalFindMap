@@ -1,5 +1,5 @@
   $(document).ready(function() {
-	
+	var file="✈" ;
 		var rez="*" ;
  var latitude=0;
  var longitude=0;
@@ -7,11 +7,7 @@
  var send =function() {
  					cleanImages('thumbnail'); toggleForm();	
  					if(latitude+longitude>0) 
- 									firebase.database().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')).set({
-    				lat: latitude, 
-    				lng: longitude, 
-    				data: rez
-  				});
+ 									firebase.storage().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')).put(file);
 				else
   				alert("no location");
  	} 
@@ -29,7 +25,7 @@
       var output = $("#result")[0];
 
       for (var i = 0; i < files.length; i++) {
-        var file = files[i];
+        file = files[i];
 
          var img = document.createElement("img");
           
@@ -40,12 +36,8 @@
          ourl=window.URL.createObjectURL(file);
          
       
-           
-      
          canvas=$("#canvas")[0];
-         //var ctx = canvas.getContext("2d");
          
-         //var img = new Image();
          
           img.onload = function(){ 
           	
