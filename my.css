@@ -18,8 +18,8 @@ body {
 	  	 	 background-color: black;
 	  	 		} 
 	  	 		#img{
-	  	 			height:"10%"
-	  	 			width:"80"
+	  	 			height:140px;
+	  	 			width:80px;
 	  	 			} 
 	  	 			#form, #help{
 	  	 				position:absolute;
@@ -110,6 +110,4 @@ option, select{
 					#blue{
 				background-color : #5ccbe1;
 				} 
-				canvas {
-					z-indez: 2345;
-					} 
+				

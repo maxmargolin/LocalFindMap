@@ -5,60 +5,61 @@
  var longitude=0;
  
  var send =function() {
- 	cleanImages('thumbnail'); toggleForm();
- 	
- 	
- 	if(latitude+longitude>0) firebase.database().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')).set({
-    lat: latitude, 
-    lng: longitude, 
-    data: rez
-  });
-  else
-  alert("noloc");
-  
+ 					cleanImages('thumbnail'); toggleForm();	
+ 					if(latitude+longitude>0) 
+ 									firebase.database().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')).set({
+    				lat: latitude, 
+    				lng: longitude, 
+    				data: rez
+  				});
+				else
+  				alert("no location");
  	} 
- 	document.getElementById("submit" ).onclick=send;
+ 	$("#submit")[0].onclick=send;
  window.onload = function() {
   //Check File API support
   if (window.File && window.FileList && window.FileReader) {
-    var filesInput = document.getElementById("files");
+    var filesInput = $("#files")[0];
 
     filesInput.addEventListener("change", function(event) {
 
       var files = event.target.files; //FileList object
       
       
-      
-      var output = document.getElementById("result");
+      var output = $("#result")[0];
 
       for (var i = 0; i < files.length; i++) {
         var file = files[i];
-
-         
 
          var img = document.createElement("img");
           
        img.setAttribute("class", "thumbnail");
        
          img.setAttribute("id", "x");
-       img.src=window.URL.createObjectURL(file);     output.insertBefore(img, null);
+         
+         ourl=window.URL.createObjectURL(file);
+         
       
-         canvas=document.getElementById("canvas");
-         var ctx = canvas.getContext("2d");
+           
+      
+         canvas=$("#canvas")[0];
+         //var ctx = canvas.getContext("2d");
          
-         var imgg = new Image();
+         //var img = new Image();
          
-          imgg.onload = function(){ ctx.drawImage(imgg, 0, 0) } 
-          
-          imgg.src = URL.createObjectURL(img.src);
-         
+          img.onload = function(){ 
+          	
+       	
+       	   		  	  var ctx = canvas.getContext("2d");
+       	   		  	  ctx.drawImage(img, 0, 0);
+       	   		  	  
+       	   		  	   
+      rez=canvas.toDataURL("image/png");
        
-         alert("not" ) ;
-        
-alert(img.src) ;
-         alert(imgg.src) ;
-    
-         
+          } 
+          
+          img.src=ourl; output.insertBefore(img, null);
+          
       }
 
     });
@@ -78,11 +79,11 @@ alert(img.src) ;
    
  var toggleForm = function(){
       toggle('form') ;
-      document.getElementById("help").style.display="none";
+      $("#help")[0].style.display="none";
     };
 var toggleHelp = function(){
       toggle('help') ;
-      document.getElementById("form").style.display="none";
+      $("form")[0].style.display="none";
     }; 
     
  
@@ -118,7 +119,7 @@ var findMe = L.Control.extend({
 			map.addControl(new findMe());
 			
 			$("#form")[0].style.display = "none";
-			document.getElementById("help").style.display = "none";
+				$("#help")[0].style.display = "none";
 			
 			var post = L.Control.extend({
  
@@ -160,7 +161,7 @@ var findMe = L.Control.extend({
 });
 			map.addControl(new help());
 			
-			 document.getElementById("top").style.color="White";
+	
 
 
 			L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png', {
@@ -192,16 +193,13 @@ var m=L.marker([0,0]).addTo(map)
 			 marker = L.marker([childData.lat, childData.lng], {icon: fIcon}) .addTo(map). bindPopup('<b> Good Condition💦 </b><br>water bottle fits');
 			 marker.on('mouseover',onClick);
 function onClick(e) {
-	if(childData.data!=undefined){ 
-	//Display("rc") 
-	   var imgg= document.createElement("img");
-          imgg.src =rez ;// childData.data;
-          alert(imgg.src.length);
-          
-         imgg.setAttribute("id","special") ;
-         document.getElementById("x").src=childData.data;
-         //insertBefore(imgg,document.getElementById("submit")); 
-   }      
+
+	if(childData.data!=undefined) 
+	{
+	Display(childData.data) ;
+	
+	  } 
+   
 } 
 		}); });
 
@@ -214,23 +212,37 @@ function onClick(e) {
 	} ;
 	} 
 	
-	 function Display(base){-
+	 function Display(fbURL){
 	 cleanImages('big');
 	
-	for (i = 1; i < 3; i++) { 
+	//for (i = 1; i < 3; i++) { 
     var img = document.createElement("img");
-     img.setAttribute("src",base+i+".jpeg");
+     img.setAttribute("src",fbURL);
  img.setAttribute("class","img");
   img.setAttribute("width","80"); var imglink=document.createElement("a");
     imglink.setAttribute("class","big")
-imglink.setAttribute("href", base+i+".jpeg");
-imglink.appendChild(img);
-var element = document.getElementById("g");
-var child = document.getElementById("c1");
-element.insertBefore(imglink, child);
-} 
-gal =gm() ;
+    
+    var dataURI=fbURL;
+     var mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
+  var binary = atob(dataURI.split(',')[1]);
+  var array = [];
+  for (var i = 0; i < binary.length; i++) {
+     array.push(binary.charCodeAt(i));
+  }
+  var z= new Blob([new Uint8Array(array)], {type: mime});
 
+   var o= URL.createObjectURL(z) ;
+    
+    
+imglink.setAttribute("href", o);
+imglink.setAttribute("target", "_blank");
+
+imglink.appendChild(img);
+var element = 	$("#g")[0];
+var child = $("#c1")[0];
+element.insertBefore(imglink, child);
+//}
+gal =gm() ;
 	 	} 
 	 
 			 map.locate({enableHighAccuracy:true, maxZoom: 16, watch:true});
@@ -239,30 +251,28 @@ gal =gm() ;
 			 reloc=1;
 	
 function onLocationFound(e) { 
-
 latitude=e.latlng.lat;
 longitude=e.latlng.lng;
 if(reloc==1){
+
 	map.setView([latitude, longitude], 15);
 reloc=0;
-
 } 
 	
-	
+	//move user location icon smoothly
 	m.slideTo(	[e.latlng.lat,e.latlng.lng], {
     duration: 500
 });
 
 	
-	
-	document.getElementById("top").style.color="Lime";
-	document.getElementById("top").innerHTML="Local Map";
+	$("#top")[0].style.color="Lime";
+		$("#top")[0].innerHTML="Local Map";
  } 
  map.on('locationfound', onLocationFound); 
 
 function onLocationError(e) { 
-document.getElementById("top").style.color="Red";
-document.getElementById("top").innerHTML="No Location, please turn GPS on";
+$("#top")[0].style.color="Red";
+$("#top")[0].innerHTML="No Location, please turn GPS on";
 map.locate({enableHighAccuracy:true, maxZoom: 16, watch:true});
 } map.on('locationerror', onLocationError);
 
