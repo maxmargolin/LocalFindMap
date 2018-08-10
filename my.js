@@ -5,9 +5,27 @@
  var longitude=0;
  
  var send =function() {
- 					cleanImages('thumbnail'); toggleForm();	
+ 					
  					if(latitude+longitude>0) 
- 									firebase.storage().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')).put(file);
+{
+surl= 		'Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')+'/7';
+ 						var task=	firebase.storage().ref(surl).put(file);
+task.on('state_changed',function progress(snap){
+
+var percent=snap.bytesTransferred*100/snap.totalBytes;
+
+$("#upp")[0].value=percent;
+},
+function(error) {
+
+  alert("error uploading");
+  },
+function complete(){
+cleanImages('thumbnail'); 
+toggleForm();	
+});
+firebase.database().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')).set({ 				lat: latitude, 				lng: longitude  , url:	surl	});
+}
 				else
   				alert("no location");
  	} 
@@ -186,12 +204,13 @@ var m=L.marker([0,0]).addTo(map)
 			 marker.on('mouseover',onClick);
 function onClick(e) {
 
-	if(childData.data!=undefined) 
-	{
-	Display(childData.data) ;
-	
-	  } 
-   
+firebase.storage().ref(childData.url).getDownloadURL().then(function(url) {
+  
+Display(url);
+}).catch(function(error) {
+//  alert(error.message);
+});
+
 } 
 		}); });
 
@@ -204,29 +223,20 @@ function onClick(e) {
 	} ;
 	} 
 	
-	 function Display(fbURL){
+	 function Display(url){
 	 cleanImages('big');
 	
 	//for (i = 1; i < 3; i++) { 
     var img = document.createElement("img");
-     img.setAttribute("src",fbURL);
+     img.setAttribute("src",url);
  img.setAttribute("class","img");
   img.setAttribute("width","80"); var imglink=document.createElement("a");
     imglink.setAttribute("class","big")
     
-    var dataURI=fbURL;
-     var mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
-  var binary = atob(dataURI.split(',')[1]);
-  var array = [];
-  for (var i = 0; i < binary.length; i++) {
-     array.push(binary.charCodeAt(i));
-  }
-  var z= new Blob([new Uint8Array(array)], {type: mime});
-
-   var o= URL.createObjectURL(z) ;
+ 
     
     
-imglink.setAttribute("href", o);
+imglink.setAttribute("href", url);
 imglink.setAttribute("target", "_blank");
 
 imglink.appendChild(img);
