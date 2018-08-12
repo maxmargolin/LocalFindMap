@@ -17,12 +17,13 @@ var percent=snap.bytesTransferred*100/snap.totalBytes;
 $("#upp")[0].value=percent;
 },
 function(error) {
-
+$("#upp")[0].value=0;
   alert("error uploading");
   },
 function complete(){
 cleanImages('thumbnail'); 
 toggleForm();	
+
 });
 firebase.database().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')).set({ 				lat: latitude, 				lng: longitude  , url:	surl	});
 }
@@ -203,7 +204,7 @@ var m=L.marker([0,0]).addTo(map)
 			 marker = L.marker([childData.lat, childData.lng], {icon: fIcon}) .addTo(map). bindPopup('<b> Good Condition💦 </b><br>water bottle fits');
 			 marker.on('mouseover',onClick);
 function onClick(e) {
-
+	 cleanImages('big');
 firebase.storage().ref(childData.url).getDownloadURL().then(function(url) {
   
 Display(url);
