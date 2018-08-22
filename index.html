@@ -3,10 +3,13 @@
 <html>
   <head>
 		<meta charset="utf-8" />
+		<meta name="mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="theme-color" content="#5f9ea6">
     <title>mux</title>
 		<link rel="stylesheet" crossorigin=""	href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" />
+
+
 <link href='simplelightbox.min.css' rel='stylesheet' type='text/css'/>
  <link rel="stylesheet" type="text/css" href="my.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -22,24 +25,23 @@
 	<canvas id="canvas" width="900" height="1600"></canvas>
 <div id="map"></div>
  <div id="help"><span class="inhelp" id="helpTitle" > 🤔 HELP 🤔 </span><br/><span class="inhelp" id="helpSemiTitle" >This is a map of furniture that people found/left that you can take for free<br/> 🛋🛏🗺 </span>
- <span class="inhelp" id="helpSemiTitle" ><b id="green">Green</b> items are more recent and are more likely to still be there</span>
-  <span class="inhelp" id="helpSemiTitle" ><b id="yellow">Yellow</b> and <b id="red">Red</b> items may already be taken</span>
+ <span class="inhelp" id="helpSemiTitle" ><b class="green">Green</b> items are more recent and are more likely to still be there</span>
+  <span class="inhelp" id="helpSemiTitle" ><b class="yellow">Yellow</b> and <b class="red">Red</b> items may already be taken</span>
   <span class="inhelp" id="helpSemiTitle">Your live location is shown in <b id="blue">Blue</b></span>
   <span class="inhelp" id="helpSemiTitle">Press the 📸 Icon if you find an item</span>
     <span id="helpend">Talk to me at  hypermusictv📧gmail.com</span>
   </div>
   <div id="form">
-      <label for="files" class="inform"><large>Post a new item</large></label><br/><small background-color='black'>Found an water fountain ⛲ on the street? Post it with photos to help others find it. Thanks 🎉 </small><br/><br/><select id="mySelect">  <option value="" selected disabled hidden>Select Condition</option>
+     <span id="tits"> <label for="files" class="inform"><font size="+1" id="tit" >Post a new item</font></label><br/><small background-color='black'>Found an water fountain ⛲ on the street? Post it with photos to help others find it. Thanks 🎉 </small></span><br/><select id="condition">  <option value="" selected disabled hidden>Select Condition</option>
   <option>Good</option>
   <option>OK</option>
   <option>Bad</option>
-</select><br/>
+</select><br/><input type="text" class="inform" placeholder="Description" id="txt"><br/>
       <input id="files" type="file" accept='image/*' class="inform" multiple/>
       <div><output id="result" class="inform"/></div>
       <br style="clear:both" />
-      <div id="sb"> <br/>
-      
-      <button id="submit">Submit</button>
+      <div id="sb"><br/>    
+      <button id="submit" class="btn">Submit</button>
       <progress value="0" max="100" id="upp" >0%</progress></div>
   
 </div>

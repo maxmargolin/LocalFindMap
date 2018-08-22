@@ -3,6 +3,8 @@
 		var rez="*" ;
  var latitude=0;
  var longitude=0;
+var clck=0;
+var lastp="☕";
  
  var send =function() {
  					
@@ -22,13 +24,20 @@ $("#upp")[0].value=0;
   },
 function complete(){
 cleanImages('thumbnail'); 
-toggleForm();	
-
+toggleForm(false);	
+$("#upp")[0].value=0;
+$('select')[0].className='';
+  $('select')[0].selectedIndex=0;
 });
-firebase.database().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')).set({ 				lat: latitude, 				lng: longitude  , url:	surl	});
+var con=$("#condition")[0].selectedIndex;
+var txt=$("#txt")[0].value;
+$("#txt")[0].value=' ';
+firebase.database().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d')).set({ 				lat: latitude, 				lng: longitude  , url:	surl	,condition: con,text:txt});
 }
 				else
+{
   				alert("no location");
+}
  	} 
  	$("#submit")[0].onclick=send;
  window.onload = function() {
@@ -79,23 +88,40 @@ firebase.database().ref('Subs/Locs/'+ (latitude+ "x"+longitude).replace(/\./g,'d
 
 
     
- var toggle = function(name){
+ var toggle = function(name, on){
       var x=document.getElementById(name);
-    if (x.style.display ==="none") 
+    if (on || x.style.display ==="none" ) 
         x.style.display ="block";
      else 
         x.style.display ="none";
-    
     };
    
- var toggleForm = function(){
-      toggle('form') ;
-      $("#help")[0].style.display="none";
+ var toggleForm = function(isUpdate){
+     if(isUpdate){
+    $(".inform").addClass("inupdate");
+ toggle('form',true) ;
+$("#tits")[0].style.display="none";
+$(".btn").addClass("bgpurple");
+$("#submit")[0].innerHTML ="Update";
+}
+else
+{
+//$("#formDesc")[0].style.display="block";
+$("#tits")[0].style.display="block";
+$(".inform").removeClass("inupdate");
+$(".btn").removeClass("bgpurple");
+ toggle('form',false) ;
+}
+      //$(".inform")[0].style.display="none";
     };
+var toggleFormF= function(){
+      toggleForm(false) ;
+    }; 
 var toggleHelp = function(){
       toggle('help') ;
       $("form")[0].style.display="none";
     }; 
+
     
  
 function gm(){
@@ -145,7 +171,7 @@ var findMe = L.Control.extend({
     container.style.height = '30px';
     container.style.backgroundImage = "url('rcam.png')";
   container.style.backgroundSize = "45px 30px";
-    container.onclick = toggleForm ;
+    container.onclick = toggleFormF ;
     return container;
 } 
  
@@ -201,9 +227,40 @@ var m=L.marker([0,0]).addTo(map)
   firebase.initializeApp(config);
 	var database = firebase.database();
 	var leadsRef = database.ref('/Subs/Locs'); leadsRef.on('value', function(snapshot) { snapshot.forEach(function(childSnapshot) { var childData = childSnapshot.val(); 
-			 marker = L.marker([childData.lat, childData.lng], {icon: fIcon}) .addTo(map). bindPopup('<b> Good Condition💦 </b><br>water bottle fits');
+
+var fbc="unknown ";
+var ccolor="white";
+switch(childData.condition) {
+    case 1:
+        fbc="good ";
+ccolor="#c2f0c2";
+        break;
+    case 2:
+        fbc="ok ";
+ccolor="khaki";
+        break;
+    case 3:
+        fbc="bad ";
+ccolor="rgba(255,0,0,0.2)";
+        break;
+}
+
+var fbtxt= childData.text
+if(!fbtxt)
+fbtxt="";
+
+
+map.on('popupopen', function(){
+
+ var cont = document.getElementsByClassName('leaflet-popup-content')[0]; var lst = cont.getElementsByTagName('script'); for (var i=0; i<lst.length;i++) { eval(lst[i].innerText) } });
+
+var pop = ' <b style="background-color:'+ccolor+';">'+ fbc +'Condition 💦 </b><br/>'+fbtxt+'<br/><button id="b">Update</button><script>$("#b").on("click", function(){clck=1; })</script>'
+
+			 marker = L.marker([childData.lat, childData.lng], {icon: fIcon}) .addTo(map). bindPopup(pop);
 			 marker.on('mouseover',onClick);
+
 function onClick(e) {
+lastp= childSnapshot.key;
 	 cleanImages('big');
 firebase.storage().ref(childData.url).getDownloadURL().then(function(url) {
   
@@ -284,5 +341,39 @@ map.locate({enableHighAccuracy:true, maxZoom: 16, watch:true});
 function onMapClick(e) { cleanImages('big'); } 
 map.on('click', onMapClick);
 	
+
+
+function upd(){
+if (clck>0){
+toggleForm(true);
+clck=0;
+}
+}
+		setInterval(upd, 1000);
+
+$('#condition')[0].onchange=(function () {
+ var optionSelected = $("option:selected", this); 
+var valueSelected = this.selectedIndex;
+
+
+
+switch(valueSelected) {
+    case 1:
+    $('select')[0].className='green';
+        break;
+    case 2:
+         $('select')[0].className='yellow';
+        break;
+    case 3:
+     $('select')[0].className='red';
+        break;
+}
+
+
+});
+
+
 	});
-		
+
+
+
