@@ -1,5 +1,6 @@
   $(document).ready(function() {
           var file = undefined;
+          var files = []
           var rez = "*";
           var latitude = 0;
           var longitude = 0;
@@ -7,6 +8,8 @@
           var lastp = "☕";
           var inUpdate = 0;
           var uid = "pre";
+
+
 
           var send = function() {
                   if (latitude + longitude > 0) {
@@ -17,38 +20,48 @@
                                   surl = 'Subs/Locs/' + (latitude + "x" + longitude).replace(/\./g, 'd');
                           var con = $("#condition")[0].selectedIndex;
                           var txt = $("#txt")[0].value;
+                          var imgPath = "";
+                          var fileUrls = {}
+                          var zi = files.length;
                           if (file != undefined) {
-                                  var task = firebase.storage().ref(surl + '/7').put(file);
-                                  task.on('state_changed', function progress(snap) {
-                                                  var percent = snap.bytesTransferred * 100 / snap.totalBytes;
-                                                  $("#upp")[0].value = percent;
-                                          },
-                                          function(error) {
-                                                  $("#upp")[0].value = 0; 
-                                                  alert("error uploading"); 
-                                          },
-                                          function complete() {
-                                                  cleanImages('thumbnail');
-                                                  toggleForm(false);
-                                                  $("#upp")[0].value = 0;
-                                                  $('select')[0].className = ''; 
-                                                  $('select')[0].selectedIndex = 0;
-                                                  $("#txt")[0].value = ' ';
-                                          });
+                                  for (var fi = 0; fi < files.length; fi++) {
+                                          file = files[fi];
+                                          fname = fi.toString() + uid + Date.now().toString() + Math.random().toString();
+                                          imgPath = surl + '/' + fname.replace(/\./g, 'd');
+                                          fileUrls[fi] = imgPath;
+                                          var task = firebase.storage().ref(imgPath).put(file);
+                                          task.on('state_changed', function progress(snap) {
+                                                          var percent = snap.bytesTransferred * 100 / (snap.totalBytes);
+                                                          $("#upp")[0].value = percent;
+                                                  },
+                                                  function(error) {
+                                                          $("#upp")[0].value = 0; 
+                                                          alert("error uploading"); 
+                                                  },
+                                                  function complete() {
+                                                          zi--;
+                                                          if (zi == 0) {
+                                                                  cleanImages('thumbnail');
+                                                                  toggleForm(false);
+                                                                  $('select')[0].className = ''; 
+                                                                  $('select')[0].selectedIndex = 0;
+                                                                  $("#txt")[0].value = '';
+                                                          }
+                                                          $("#upp")[0].value = 0;
+                                                  });
+                                  }
                           } else {
-                                  $("#txt")[0].value = ' ';
                                   cleanImages('thumbnail');
                                   toggleForm(false);
-                                  $("#upp")[0].value = 0;
                                   $('select')[0].className = ''; 
                                   $('select')[0].selectedIndex = 0;
+                                  $("#txt")[0].value = '';
                           }
-
 
                           firebase.database().ref(surl).set({
                                   lat: latitude,
                                   lng: longitude,
-                                  url: surl + '/7',
+                                  urls: fileUrls,
                                   condition: con,
                                   text: txt,
                                   user: uid
@@ -65,33 +78,20 @@
 
                           filesInput.addEventListener("change", function(event) {
 
-                                  var files = event.target.files; //FileList object
-
-
+                                  files = event.target.files; //FileList object
                                   var output = $("#result")[0];
-
                                   for (var i = 0; i < files.length; i++) {
                                           file = files[i];
-
                                           var img = document.createElement("img");
-
                                           img.setAttribute("class", "thumbnail");
-
                                           img.setAttribute("id", "x");
-
                                           ourl = window.URL.createObjectURL(file);
-
-
                                           canvas = $("#canvas")[0];
-
-
                                           img.onload = function() {
 
 
                                                   var ctx = canvas.getContext("2d");
                                                   ctx.drawImage(img, 0, 0);
-
-
                                                   rez = canvas.toDataURL("image/png");
 
                                           }
@@ -251,8 +251,8 @@
           };
           firebase.initializeApp(config);
           firebase.auth().signInAnonymously().catch(function(error) {
-              uid = "errr";
-              console.log("errrs");
+                  uid = "errr";
+                  console.log("errrs");
           });
           firebase.auth().onAuthStateChanged(function(user) {
                   if (user) {
@@ -266,7 +266,7 @@
 
           var database = firebase.database();
           var leadsRef = database.ref('/Subs/Locs');
-          leadsRef.on('value', function(snapshot) {
+          leadsRef.once('value', function(snapshot) {
                   snapshot.forEach(function(childSnapshot) {
                           var childData = childSnapshot.val();
 
@@ -309,16 +309,21 @@
                           marker.on('click', onClick);
 
                           function onClick(e) {
-                                  lastp = childSnapshot.key;
-                                  cleanImages('big');
 
-                                  if (childData.url != undefined) {
-                                          firebase.storage().ref(childData.url).getDownloadURL().then(function(url) { 
-                                                  Display(url);
-                                          }).catch(function(error) {
-                                                  //  alert(error.message);
+                                  cleanImages('big');
+                                  lastp = childSnapshot.key;
+                                  var urlRef = database.ref("/Subs/Locs/" + lastp + "/urls");
+                                  urlRef.once("value", function(snapshot) {
+                                          snapshot.forEach(function(urlChild) {
+                                                  firebase.storage().ref(urlChild.val()).getDownloadURL().then(function(url) { 
+                                                          Display(url);
+                                                  }).catch(function(error) {
+                                                          //  alert(error.message);
+                                                  });
                                           });
-                                  }
+                                  });
+
+
                           }
                   });
           });
@@ -334,7 +339,7 @@
           }
 
           function Display(url) {
-                  cleanImages('big');
+
 
                   //for (i = 1; i < 3; i++) { 
                   var  img = document.createElement("img");
