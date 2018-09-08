@@ -6,9 +6,9 @@
           var clck = 0;
           var lastp = "☕";
           var inUpdate = 0;
+          var uid = "pre";
+
           var send = function() {
-
-
                   if (latitude + longitude > 0) {
                           var surl = "pre";
                           if (inUpdate)
@@ -20,7 +20,6 @@
                           if (file != undefined) {
                                   var task = firebase.storage().ref(surl + '/7').put(file);
                                   task.on('state_changed', function progress(snap) {
-
                                                   var percent = snap.bytesTransferred * 100 / snap.totalBytes;
                                                   $("#upp")[0].value = percent;
                                           },
@@ -51,7 +50,8 @@
                                   lng: longitude,
                                   url: surl + '/7',
                                   condition: con,
-                                  text: txt
+                                  text: txt,
+                                  user: uid
                           });
                   } else {
                           alert("no location");
@@ -250,6 +250,20 @@
                   messagingSenderId: "195107121159"
           };
           firebase.initializeApp(config);
+          firebase.auth().signInAnonymously().catch(function(error) {
+              uid = "errr";
+              console.log("errrs");
+          });
+          firebase.auth().onAuthStateChanged(function(user) {
+                  if (user) {
+                          uid = user.uid;
+                          console.log(uid);
+                  } else {
+                          uid = "off";
+                          console.log("off");
+                  }
+          });
+
           var database = firebase.database();
           var leadsRef = database.ref('/Subs/Locs');
           leadsRef.on('value', function(snapshot) {
