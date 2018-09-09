@@ -1,0 +1,22 @@
+[debug] [2018-09-09T20:21:51.366Z] ----------------------------------------------------------------------
+[debug] [2018-09-09T20:21:51.369Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\User\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase deploy
+[debug] [2018-09-09T20:21:51.370Z] CLI Version:   3.17.7
+[debug] [2018-09-09T20:21:51.370Z] Platform:      win32
+[debug] [2018-09-09T20:21:51.370Z] Node Version:  v8.9.4
+[debug] [2018-09-09T20:21:51.371Z] Time:          Sun Sep 09 2018 23:21:51 GMT+0300 (Jerusalem Summer Time)
+[debug] [2018-09-09T20:21:51.371Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-09-09T20:21:51.393Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-09T20:21:51.394Z] > authorizing via signed-in user
+[debug] [2018-09-09T20:21:51.396Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-09-09T20:21:51.397Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token: '1/4AaHMZ4Wt6Pb6Rn1yv5bvFMlCFqfkLMgpNkRxtjC9Rg',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Sun Sep 09 2018 23:21:51 GMT+0300 (Jerusalem Summer Time)
+[debug] [2018-09-09T20:21:51.831Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-09T20:21:51.874Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/mekomit-8bc02  
+  
+ Sun Sep 09 2018 23:21:51 GMT+0300 (Jerusalem Summer Time)

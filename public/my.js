@@ -1,6 +1,6 @@
   $(document).ready(function() {
           var file = undefined;
-          var files = []
+          var files = [];
           var rez = "*";
           var latitude = 0;
           var longitude = 0;
@@ -77,8 +77,10 @@
                           var filesInput = $("#files")[0];
 
                           filesInput.addEventListener("change", function(event) {
-
-                                  files = event.target.files; //FileList object
+                                  if (files == [])
+                                          files = event.target.files;
+                                  else
+                                          files = Array.prototype.slice.call(files).concat(Array.prototype.slice.call(event.target.files));
                                   var output = $("#result")[0];
                                   for (var i = 0; i < files.length; i++) {
                                           file = files[i];
