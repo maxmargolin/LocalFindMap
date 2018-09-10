@@ -23,7 +23,7 @@
                           var imgPath = "";
                           var fileUrls = {}
                           var zi = files.length;
-                          if (file != undefined) {
+                          if (files != undefined && files.length > 0) {
                                   for (var fi = 0; fi < files.length; fi++) {
                                           file = files[fi];
                                           fname = fi.toString() + uid + Date.now().toString() + Math.random().toString();
@@ -77,13 +77,14 @@
                           var filesInput = $("#files")[0];
 
                           filesInput.addEventListener("change", function(event) {
+                                  var newFiles = event.target.files;
                                   if (files == [])
-                                          files = event.target.files;
+                                          files = newFiles;
                                   else
-                                          files = Array.prototype.slice.call(files).concat(Array.prototype.slice.call(event.target.files));
+                                          files = Array.prototype.slice.call(files).concat(Array.prototype.slice.call(newFiles));
                                   var output = $("#result")[0];
-                                  for (var i = 0; i < files.length; i++) {
-                                          file = files[i];
+                                  for (var i = 0; i < newFiles.length; i++) {
+                                          file = newFiles[i];
                                           var img = document.createElement("img");
                                           img.setAttribute("class", "thumbnail");
                                           img.setAttribute("id", "x");
@@ -117,6 +118,8 @@
 
           var toggleForm = function(isUpdate) {
                   file = undefined;
+                  files = []
+                  cleanImages("big");
                   if (isUpdate) {
                           inUpdate = 1;
                           $(".inform").addClass("inupdate");
@@ -259,7 +262,6 @@
           firebase.auth().onAuthStateChanged(function(user) {
                   if (user) {
                           uid = user.uid;
-                          console.log(uid);
                   } else {
                           uid = "off";
                           console.log("off");
