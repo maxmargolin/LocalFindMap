@@ -9,8 +9,6 @@
           var inUpdate = 0;
           var uid = "pre";
 
-
-
           var send = function() {
                   if (latitude + longitude > 0) {
                           var surl = "pre";
@@ -26,7 +24,7 @@
                           if (files != undefined && files.length > 0) {
                                   for (var fi = 0; fi < files.length; fi++) {
                                           file = files[fi];
-                                          fname = fi.toString() + uid + Date.now().toString() + Math.random().toString();
+                                          var fname = file.name + fi.toString() +  uid + Date.now().toString() + Math.random().toString();
                                           imgPath = surl + '/' + fname.replace(/\./g, 'd');
                                           fileUrls[fi] = imgPath;
                                           var task = firebase.storage().ref(imgPath).put(file);
@@ -85,6 +83,7 @@
                                   var output = $("#result")[0];
                                   for (var i = 0; i < newFiles.length; i++) {
                                           file = newFiles[i];
+
                                           var img = document.createElement("img");
                                           img.setAttribute("class", "thumbnail");
                                           img.setAttribute("id", "x");
@@ -112,8 +111,10 @@
 
           var toggle = function(name, on) {
                   var x = document.getElementById(name);    
-                  if  (on || x.style.display  === "none")        x.style.display  = "block";    
-                  else         x.style.display  = "none";
+                  if  (on || x.style.display  === "none")       
+                          x.style.display  = "block";    
+                  else        
+                          x.style.display  = "none";
           };
 
           var toggleForm = function(isUpdate) {
