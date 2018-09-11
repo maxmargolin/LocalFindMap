@@ -18,14 +18,15 @@
                                   surl = 'Subs/Locs/' + (latitude + "x" + longitude).replace(/\./g, 'd');
                           var con = $("#condition")[0].selectedIndex;
                           var txt = $("#txt")[0].value;
-                          var imgPath = "";
+                          var imgPath = undefined;
                           var fileUrls = {}
                           var zi = files.length;
                           if (files != undefined && files.length > 0) {
                                   for (var fi = 0; fi < files.length; fi++) {
                                           file = files[fi];
-                                          var fname = file.name + fi.toString() +  uid + Date.now().toString() + Math.random().toString();
-                                          imgPath = surl + '/' + fname.replace(/\./g, 'd');
+                                          var fname = fi.toString() + uid + Date.now().toString() + Math.random().toString();
+                                          imgPath = surl + '/' + fname.replace(/\./g, 'd') + file.name;
+                                          console.log("uploading"+imgPath);
                                           fileUrls[fi] = imgPath;
                                           var task = firebase.storage().ref(imgPath).put(file);
                                           task.on('state_changed', function progress(snap) {
@@ -55,7 +56,6 @@
                                   $('select')[0].selectedIndex = 0;
                                   $("#txt")[0].value = '';
                           }
-
                           firebase.database().ref(surl).set({
                                   lat: latitude,
                                   lng: longitude,
@@ -65,7 +65,7 @@
                                   user: uid
                           });
                   } else {
-                          alert("no location");
+                          alert("location is required");
                   }
           }
           $("#submit")[0].onclick = send;
@@ -90,14 +90,10 @@
                                           ourl = window.URL.createObjectURL(file);
                                           canvas = $("#canvas")[0];
                                           img.onload = function() {
-
-
                                                   var ctx = canvas.getContext("2d");
                                                   ctx.drawImage(img, 0, 0);
                                                   rez = canvas.toDataURL("image/png");
-
                                           }
-
                                           img.src = ourl;
                                           output.insertBefore(img, null);
 
