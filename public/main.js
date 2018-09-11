@@ -26,7 +26,7 @@
                                           file = files[fi];
                                           var fname = fi.toString() + uid + Date.now().toString() + Math.random().toString();
                                           imgPath = surl + '/' + fname.replace(/\./g, 'd') + file.name;
-                                          console.log("uploading"+imgPath);
+                                          console.log("uploading" + imgPath);
                                           fileUrls[fi] = imgPath;
                                           var task = firebase.storage().ref(imgPath).put(file);
                                           task.on('state_changed', function progress(snap) {
@@ -267,6 +267,9 @@
 
           var database = firebase.database();
           var leadsRef = database.ref('/Subs/Locs');
+          var markers = new L.MarkerClusterGroup();
+
+
           leadsRef.once('value', function(snapshot) {
                   snapshot.forEach(function(childSnapshot) {
                           var childData = childSnapshot.val();
@@ -304,10 +307,11 @@
 
                           var pop = ' <b style="background-color:' + ccolor + ';">' + fbc + 'Condition 💦 </b><br/>' + fbtxt + '<br/><button id="b">Update</button><script>$("#b").on("click", function(){clck=1; })</script>'
 
-                          marker = L.marker([childData.lat, childData.lng], {
+                          var marker = L.marker([childData.lat, childData.lng], {
                                   icon: fIcon
-                          }).addTo(map).bindPopup(pop);
+                          }).bindPopup(pop);
                           marker.on('click', onClick);
+                          markers.addLayer(marker);
 
                           function onClick(e) {
 
@@ -328,7 +332,7 @@
                           }
                   });
           });
-
+          map.addLayer(markers);
 
 
           function cleanImages(cname) {
