@@ -25,7 +25,7 @@ html, body, #map {
   width: 80px;
 }
 
-#form, #help {
+#xxx {
   position: absolute;
   top: 7%;
   left: 12%;
@@ -38,26 +38,50 @@ html, body, #map {
 	padding: 5px;
 }
 
+#user,#form, #help{
+    position: absolute;
+    top: 7%;
+    left: 12%;
+    z-index: 1800;
+    border-radius: 25px;
+    background: #f8ffff;
+    width: 76%;
+    margin: auto;
+    margin-top: 10px;
+    border-radius: 25px;
+    border: 2px solid #6495ed;
+    text-align:center;
+
+}
 .inform {
   background-color: black;
   border-style: solid;
   border-color: black;
   border-width: 1px;
+  margin:auto;
 }
 
+.inuser {
+  background-color: black;
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+}
 .inupdate {
-  color: plum;
   border-style: solid;
   border-color: black;
   border-width: 1px;
 }
 
-.inhelp {
+.inhelp,.inuser {
   color: black;
   background-color: white;
   border-style: solid;
   border-color: black;
   border-width: 2px;
+}
+.central {
+  text-align: center;
 }
 
 .gallery {
@@ -119,6 +143,14 @@ small {
   border-width: 2px;
   border-color: gray;
 }
+#userTitle {
+  font-size: 24px;
+  background-color: #ADFF2F;
+  color: black;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+}
 
 #helpend {
   background-color: black;
@@ -131,19 +163,15 @@ small {
 .green {
   background-color: lime;
 }
-
 .yellow {
   background-color: yellow;
 }
-
 .red {
   background-color: #ff8c8c;
 }
-
-#blue {
+.blue {
   background-color: #5ccbe1;
 }
-
 #txt {
   color: #5ccbe1;
   opacity: 1;
@@ -156,11 +184,15 @@ small {
 select option:nth-child(4) {
   background: #ff8c8c;
 }
-
 select option:nth-child(2) {
   background: lime;
 }
-
 select option:nth-child(3) {
   background: yellow;
+}
+#result{
+  border-color:initial;
+}
+.circled{
+  border-radius: 50%;
 }

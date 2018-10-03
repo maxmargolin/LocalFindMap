@@ -14,36 +14,43 @@
 	<script type="text/javascript" src="simplelightbox.min.js"></script>
 	<script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet-src.js" crossorigin=""></script>
 	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.0/dist/MarkerCluster.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.0/dist/MarkerCluster.Default.css">
-  <script src="https://unpkg.com/leaflet.markercluster@1.4.0/dist/leaflet.markercluster-src.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.0/dist/MarkerCluster.Default.css">
+	<script src="https://unpkg.com/leaflet.markercluster@1.4.0/dist/leaflet.markercluster-src.js"></script>
 	<script src='https://unpkg.com/leaflet.marker.slideto@0.2.0/Leaflet.Marker.SlideTo.js'></script>
 	<script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js"></script>
-	<script src="main.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.26.29/sweetalert2.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.26.29/sweetalert2.min.css">
+		<script src="main.js"></script>
 </head>
 
 <body bgcolor="#000000" text="white">
 	<canvas id="canvas" width="900" height="1600"></canvas>
 	<div id="map"></div>
-	<div id="help"><span class="inhelp" id="helpTitle"> 🤔 HELP 🤔 </span><br/><span class="inhelp" id="helpSemiTitle">This is a map of public drinking water fountains that people like you spotted<br/> 🛋🛏🗺 </span>
+	<div id="help" class="pop"><span class="inhelp" id="helpTitle"> 🤔 HELP 🤔 </span><br/><span class="inhelp" id="helpSemiTitle">This is a map of public drinking water fountains that people like you spotted<br/> 🛋🛏🗺 </span>
 		<span class="inhelp" id="helpSemiTitle"><b class="green">Green</b> items are more recent and are more likely to still be there</span>
 		<span class="inhelp" id="helpSemiTitle"><b class="yellow">Yellow</b> and <b class="red">Red</b> items may already be taken</span>
-		<span class="inhelp" id="helpSemiTitle">Your live location is shown in <b id="blue">Blue</b></span>
+		<span class="inhelp" id="helpSemiTitle">Your live location is shown in <b class="blue">Blue</b></span>
 		<span class="inhelp" id="helpSemiTitle">Press the 📸 Icon if you find an item</span>
 		<span id="helpend">Talk to me at hypermusictv📧gmail.com</span>
 	</div>
-	<div id="form">
-		<span id="tits"> <label for="files" class="inform"><font size="+1" id="tit" >Post a new item</font></label><br/><small background-color='black'>Found a water fountain ⛲ on the street? Post it with photos to help others find it. Thanks 🎉 </small></span><br/>
-		<select id="condition">  <option value="" selected disabled hidden>Select Condition</option>
+	<div id="form" class="pop">
+			<span id="tits"><label for="files" class="inform"><font size="+1" id="tit">Post a new item</font></label><br/><small background-color='black'>Found a water fountain ⛲ on the street? Post it with photos to help others find it. Thanks 🎉 </small></span><br/>
+			<select id="condition">  <option value="" selected disabled hidden>Select Condition</option>
   <option>Good</option>
   <option>OK</option>
   <option>Bad</option>
 </select><br/><input type="text" class="inform" placeholder="Description" id="txt"><br/>
-		<input id="files" type="file" accept='image/*' class="inform" multiple/>
-		<div><output id="result" class="inform" /></div>
-		<br style="clear:both" />
-		<div id="sb"><br/>
-			<button id="submit" class="btn">Submit</button>
-			<progress value="0" max="100" id="upp">0%</progress></div>
+			<input id="files" type="file" accept='image/*' class="inform" multiple/>
+			<div><output id="result" class="inform" /></div>
+			<br style="clear:both" />
+			<div id="sb"><br/>
+				<button id="submit" class="btn">Submit</button>
+				<progress value="0" max="100" id="upp">0%</progress></div>
+		</div>
+	<div id="user" class="pop"><span class="inuser" id="userTitle"> 🚶 User 🚶🏾‍</span><br/>
+		<span class="inuser usertag" id="helpSemiTitle">xx</span>
+		<span class="inuser scoretag" id="helpSemiTitle">Score:  55 </span>
+		<span class="inuser" id="helpSemiTitle">Rank:  1st </span>
 	</div>
 	<div class="gallery" id="g">
 		<div class="clear" id="c1"></div>
@@ -51,5 +58,4 @@
 	<b><div id="top">Local Map</div></b>
 
 </body>
-
 </html>
