@@ -33,9 +33,8 @@ $(document).ready(function() {
                                         file = files[fi];
                                         var fname = fi.toString() + uid + Date.now().toString() + Math.random().toString();
                                         imgPath = surl + '/' + fname.replace(/\./g, 'd') + file.name;
-                                        console.log("uploading" + imgPath);
                                         fileUrls[fi] = imgPath;
-                                        var task = firebase.storage().ref(imgPath).put(file);
+                                        var task = storageRef.ref(imgPath).put(file);
                                         task.on('state_changed', function progress(snap) {
                                                         var percent = snap.bytesTransferred * 100 / (snap.totalBytes);
                                                         $("#upp")[0].value = percent;
@@ -291,7 +290,8 @@ $(document).ready(function() {
                 messagingSenderId: "195107121159"
         };
         firebase.initializeApp(config);
-
+        var db = firebase.database();
+        var storageRef = firebase.storage();
         firebase.auth().onAuthStateChanged(function(user) {
                 us = user;
                 if (user) {
@@ -404,21 +404,22 @@ $(document).ready(function() {
                         markers.addLayer(marker);
 
                         function onClick(e) {
-
                                 cleanImages('big');
                                 lastp = childSnapshot.key;
                                 var urlRef = database.ref("/Subs/Locs/" + lastp + "/urls");
                                 urlRef.once("value", function(snapshot) {
-                                        snapshot.forEach(function(urlChild) {
-                                                firebase.storage().ref(urlChild.val()).getDownloadURL().then(function(url) { 
-                                                        Display(url);
-                                                }).catch(function(error) {
-                                                        //  alert(error.message);
-                                                });
+                                        snapshot.forEach(urlChild => {
+                                                if (urlChild.val()["url"] === undefined) {
+                                                        storageRef.ref(urlChild.val()).getDownloadURL().then(function(url) { 
+                                                                Display(url);
+                                                        });
+                                                } else {
+                                                        storageRef.ref(urlChild.val()["url"]).getDownloadURL().then(function(url) { 
+                                                                Display(url);
+                                                        })
+                                                }
                                         });
                                 });
-
-
                         }
                 });
         });
@@ -515,7 +516,20 @@ $(document).ready(function() {
                 }
                 if (reportClick > 0) {
                         var report = {};
+                        var random = 0;
                         var rdest = "reports/" + lastp + "/" + uid + Date.now().toString();
+                        var pic = undefined;
+                        db.ref('/Subs/Locs/' + lastp + "/urls/").once('value', snapshot => {
+                                random = Math.floor(Math.random() * snapshot.numChildren());
+                                console.log(random);
+                                db.ref('/Subs/Locs/' + lastp + "/urls/").once('value', uus => {
+                                        pic = uus.val()[random]["url"];
+                                        if (pic === undefined)
+                                                pic = uus.val()[random];
+
+                                });
+
+                        });
                         report['point'] = lastp;
                         report['time'] = Date.now();
                         report['userID'] = uid;
@@ -534,7 +548,6 @@ $(document).ready(function() {
                                 if (res1.value == undefined) {
                                         res1.value = false;
                                 }
-                                console.log(res1.value);
                                 report['exist'] = res1.value;
                                 if (res1.value) {
                                         swal({
@@ -547,10 +560,10 @@ $(document).ready(function() {
                                                 confirmButtonText: 'Yes',
                                                 cancelButtonText: 'No'
                                         }).then((res2) => {
+
                                                 if (res2.value == undefined) {
                                                         res2.value = false;
                                                 }
-                                                console.log(res2.value);
                                                 report['nextToIt'] = res2.value;
                                                 report['lat'] = latitude;
                                                 report['lng'] = longitude;
@@ -562,7 +575,9 @@ $(document).ready(function() {
                                                                         '3': 'Bad'
                                                                 })
                                                         }, 5)
-                                                })
+                                                });
+
+
                                                 swal({
                                                         title: 'condition?',
                                                         input: 'radio',
@@ -576,16 +591,36 @@ $(document).ready(function() {
                                                                         }
                                                                 });
                                                         }
+
                                                 }).then(function(res3) {
-                                                        console.log(res3.value);
                                                         report['condition'] = res3.value;
-                                                        swal(
-                                                                'Sucess!',
-                                                                'Thanks for the report!',
-                                                                'success'
-                                                        );
-                                                        firebase.database().ref(rdest).set(report);
-                                                })
+                                                        storageRef.ref(pic).getDownloadURL().then(function(urlr) {
+                                                                swal({
+                                                                        title: 'Is this a good photo?',
+                                                                        html: '<img src="' + urlr + '" height="420"/>',
+                                                                        showCancelButton: true,
+                                                                        confirmButtonColor: '#3085d6',
+                                                                        cancelButtonColor: '#d33',
+                                                                        confirmButtonText: 'Yes',
+                                                                        cancelButtonText: 'No',
+                                                                }).then((res4) => {
+                                                                        if (res4.value == undefined) {
+                                                                                res4.value = false;
+                                                                        }
+                                                                        report['pic'] = {
+                                                                                "index": random,
+                                                                                "rate": res4.value
+                                                                        };
+                                                                        swal(
+                                                                                'Sucess!',
+                                                                                'Thanks for the report!',
+                                                                                'success'
+                                                                        );
+
+                                                                        firebase.database().ref(rdest).set(report);
+                                                                });
+                                                        });
+                                                });
                                         });
                                 } else {
                                         swal(
